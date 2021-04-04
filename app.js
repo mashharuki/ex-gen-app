@@ -1,18 +1,24 @@
+/**
+ * Webアプリケーション本体の設定するファイル
+ */
 var createError = require('http-errors');
+// expressモジュールを読み込む
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+// index.jsが実行されるように設定する。
 var indexRouter = require('./routes/index');
+// users.jsが実行されるように設定する。
 var usersRouter = require('./routes/users');
-
+// hello.jsが実行されるように設定する。
+var helloRouter = require('./routes/hello');
+// アプリケーションの作成
 var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+// 関数読み込み
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/hello', helloRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -37,5 +43,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+// module.exportsにappオブジェクトを設定する。
 module.exports = app;
