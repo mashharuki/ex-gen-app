@@ -3,37 +3,34 @@ const router = express.Router();
 // xml2jsモジュールを取り込む。
 const parseString = require('xml2js').parseString;
 const http = require('http');
+// sqlite3モジュールを読み込む
+const sqlite3 = require('sqlite3');
+// データベースオブジェクトの取得
+const db = new sqlite3.Database('mydb.sqlite3');
 
 /* 
  * GETアクセス時の処理 
  */
 router.get('/', (req, res, next) => {
-    // インターネット上の情報を取得する変数
-    var opt = {
-        host: 'news.google.com',
-        port: 443,
-        path: '/rss?hl=ja&ie=UTF-8&oe=UTF-8&gl=JP&ceid=JP:ja'
-    };
-    // RSSから必要な情報を取り出す。
-    http.get(opt, (res2) => {
-        var body = '';
-        res2.on('data', (data) => {
-            body += data;
+    // データベースのシリアライズ
+    db.serialize(() => {
+        // レコードの結果を詰める変数
+        var rows= "";
+        // レコードを全て取り出す。
+        db.each("select * from mydata", (err, row) => {
+            // データベースアクセス完了時の処理
+            if (!err) {
+                rows += "<tr><th>" + row.id + "</th><td>" + row.name + "</td><td></tr>"; 
+            } 
+        }, (err, count) => {
+            var data = {
+                title: 'Hello!',
+                content: rows // データベースから取り出したデータ
+            };
+            // hello.ejsを呼び出す。
+            res.render('hello', data);
         });
-        // データを受信し終わった時の処理
-        res2.on('end', () => {
-            parseString(body.trim(), (err, result) => {
-                // 取得結果を表示する。
-                console.log(result);
-                var data = {
-                    title: 'Google News',
-                    content: result.rss.channel[0].item
-                };
-                // hello.ejsを呼び出す。
-                res.render('hello', data);
-            });
-        })
-    });
+    });        
 });
 
 module.exports = router;
