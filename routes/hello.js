@@ -9,7 +9,7 @@ const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('mydb.sqlite3');
 
 /* 
- * GETアクセス時の処理 
+ * index画面 GETアクセス時の処理 
  */
 router.get('/', (req, res, next) => {
     // データベースのシリアライズ
@@ -54,6 +54,100 @@ router.post('/add', (req, res, next) => {
     // SQLを実行する。
     db.serialize(() => {
         db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
+    });
+    // heeloのインデックス画面に遷移する。
+    res.redirect('/hello');
+});
+
+/**
+ * show画面 GETアクセス画面
+ */
+router.get('/show', (req, res, next) => {
+    const id = req.body.id;
+    // SQL実行
+    db.serialize(() => {
+        const q = "SELECT * from mydata where id = ?";
+        db.get(q, [id], (err, row) => {
+            if (!err) {
+                var data = { 
+                    title: 'Hello/show',
+                    content: 'id = ' + id + 'のレコード',
+                    mydata: row 
+                }
+                res.render('hello/show', data);
+            }
+        });
+    });
+});
+
+/* 
+ * edit画面 GETアクセス時の処理 
+ */
+router.get('/edit', (req, res, next) => {
+    const id = req.query.id;
+    db.serialize (() => {
+        const q = "select * from mydata where id = ?";
+        db.get(q, [id], (err, row) => {
+            if (!err) {
+                var data = {
+                    title: 'Hello/edit',
+                    content: 'id = ' + id + '新しいレコードを編集',
+                    mydata: row
+                }
+                res.render('hello/edit', data);
+            }
+        });
+    });
+});
+
+/* 
+ * edit画面 POSTアクセス時の処理 
+ */
+router.post('/edit', (req, res, next) => {
+    const id = req.body.id;
+    const nm = req.body.name;
+    const ml = req.body.mail;
+    const ag = req.body.age;
+    // SQLを構築する。
+    const q = "update mydata set name = ?, mail = ?, age = ? where id = ?";
+    // SQLを実行する。
+    db.serialize(() => {
+        db.run(q, nm, ml, ag, id);
+    });
+    // heeloのインデックス画面に遷移する。
+    res.redirect('/hello');
+});
+
+/* 
+ * delete画面 GETアクセス時の処理 
+ */
+router.get('/delete', (req, res, next) => {
+    const id = req.query.id;
+    db.serialize (() => {
+        const q = "select * from mydata where id = ?";
+        db.get(q, [id], (err, row) => {
+            if (!err) {
+                var data = {
+                    title: 'Hello/delete',
+                    content: 'id = ' + id + 'のレコードを削除',
+                    mydata: row
+                }
+                res.render('hello/delte', data);
+            }
+        });
+    });
+});
+
+/* 
+ * delete画面 POSTアクセス時の処理 
+ */
+router.post('/delete', (req, res, next) => {
+    const id = req.body.id;
+    // SQLを実行する。
+    db.serialize(() => {
+        // SQLを構築する。
+        const q = "delete from mydata where id = ?";
+        db.run(q, id);
     });
     // heeloのインデックス画面に遷移する。
     res.redirect('/hello');
