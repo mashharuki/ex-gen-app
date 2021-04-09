@@ -28,9 +28,35 @@ router.get('/', (req, res, next) => {
                 content: rows // データベースから取り出したデータ
             };
             // hello.ejsを呼び出す。
-            res.render('hello', data);
+            res.render('hello/index', data);
         });
     });        
+});
+
+/* 
+ * add画面 GETアクセス時の処理 
+ */
+router.get('/add', (req, res, next) => {
+    var data = {
+        title: 'Hello/Add',
+        content: '新しいレコードを入力：'
+    }
+    res.render('hello/add', data);
+});
+
+/* 
+ * add画面 POSTアクセス時の処理 
+ */
+router.post('/add', (req, res, next) => {
+    const nm = req.body.name;
+    const ml = req.body.mail;
+    const ag = req.body.age;
+    // SQLを実行する。
+    db.serialize(() => {
+        db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
+    });
+    // heeloのインデックス画面に遷移する。
+    res.redirect('/hello');
 });
 
 module.exports = router;
