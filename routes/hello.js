@@ -153,4 +153,47 @@ router.post('/delete', (req, res, next) => {
     res.redirect('/hello');
 });
 
+/* 
+ * find画面 GETアクセス時の処理 
+ */
+router.get('/find', (req, res, next) => {
+    db.serialize (() => {
+        db.all("select * from mydata", (err, rows) => {
+            if (!err) {
+                var data = {
+                    title: 'Hello/find',
+                    find: '',
+                    content: '検索条件を入力してください。',
+                    mydata: rows
+                }
+                res.render('hello/find', data);
+            }
+        });
+    });
+});
+
+/* 
+ * find画面 POSTアクセス時の処理 
+ */
+router.post('/find', (req, res, next) => {
+    const find = req.body.find;
+    // SQLを実行する。
+    db.serialize(() => {
+        // SQLを構築する。
+        const q = "select * from mydata where ";
+        db.all(q + find , [], (err, rows) => {
+            if (! err) {
+                var data = {
+                    title: 'Hello/find',
+                    find: find,
+                    content: '検索条件' + find,
+                    mydata: rows
+                }
+                // heeloのインデックス画面に遷移する。
+                res.redirect('hello/find', data);
+            }
+        });
+    });
+});
+
 module.exports = router;
