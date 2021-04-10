@@ -51,9 +51,12 @@ router.get('/add', (req, res, next) => {
  * add画面 POSTアクセス時の処理 
  */
 router.post('/add', [
-        check ('name', 'NAMEは必ず入力してください。').notEmpty(),
-        check ('mail', 'MAILはメールアドレスを入力してください。').isEmail(),
-        check ('age', 'AGEは年齢(整数)を入力してください。').isInt()
+        check ('name', 'NAMEは必ず入力してください。').notEmpty().escape(),
+        check ('mail', 'MAILはメールアドレスを入力してください。').isEmail().escape(),
+        check ('age', 'AGEは年齢(整数)を入力してください。').isInt(),
+        check ('age', 'AGEはゼロ以上120以下で入力ください。').custom(value => {
+            return value >= 0 & value <= 120;
+        })
     ],(req, res, next) => {
         // エラーメッセージ
         const errors = validationResult(req);
