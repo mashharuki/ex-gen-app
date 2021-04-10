@@ -23,7 +23,9 @@ router.get('/', (req, res, next) => {
  */
 router.get('/add', (req, res, next) => {
   var data = {
-      title: 'Users/Add'
+      title: 'Users/Add',
+      form: new db.User(),
+      err: null
   }
   res.render('users/add', data);
 });
@@ -38,9 +40,17 @@ router.post('/add', (req, res, next) => {
       pass: req.body.pass,
       mail: req.body.mail,
       age: req.body.age
-    })).then(users => {
+    })).then(users => { // 正常時の処理
       // usersのインデックス画面に遷移する。
       res.redirect('/users');
+    }).catch(err => { // エラーが発生した場合
+      var data = {
+        title: 'Users/Add',
+        form: form,
+        err: err
+      }
+      // レンダリングする。
+      res.render('users/add', data);
     });
 });
 
@@ -68,6 +78,32 @@ router.post('/edit', (req, res, next) => {
       mail: req.body.mail,
       age: req.body.age
     },{
+      where: { id: req.body.id }
+    })).then(users => {
+      // usersのインデックス画面に遷移する。
+      res.redirect('/users');
+    });
+});
+
+/* 
+ * delete画面 GETアクセス時の処理 
+ */
+router.get('/delete', (req, res, next) => {
+  db.User.findByPk(req.query.id).then(user => {
+    var data = {
+      title: 'Users/Delete',
+      form: user
+    }
+    res.render('users/delete', data);
+  });
+});
+
+/* 
+* delete画面 POSTアクセス時の処理 
+*/
+router.post('/delete', (req, res, next) => {
+    // SQLを実行する。
+    db.sequelize.sync().then( () => db.User.destroy({
       where: { id: req.body.id }
     })).then(users => {
       // usersのインデックス画面に遷移する。
