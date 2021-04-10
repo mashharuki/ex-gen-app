@@ -18,15 +18,15 @@
         <form method="post" action="/hello/add">
             <div class="form-group">
                 <label for="name">NAME</label>
-                <input type="text" name="name" id="name" class="form-control">
+                <input type="text" name="name" id="name" class="form-control" value="<%= form.name %>">
             </div>
             <div class="form-group">
                 <label for="mail">MAIL</label>
-                <td><input type="text" name="mail" id="mail" class="form-control">
+                <td><input type="text" name="mail" id="mail" class="form-control" value="<%= form.mail %>">
             </div>
             <div class="form-group">
                 <label for="age">AGE</label>
-                <td><input type="number" name="age" id="age" class="form-control">
+                <td><input type="number" name="age" id="age" class="form-control" value="<%= form.age %>">
             </div>
             <input type="submit" value="作成" class="btn btn-primary">
         </form>
