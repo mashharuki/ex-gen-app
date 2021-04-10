@@ -9,11 +9,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // sessionモジュールを読み込む
 const session = require('express-session');
-// index.jsが実行されるように設定する。
+// 「/」でアクセスしたときにindex.jsが実行されるように設定する。
 var indexRouter = require('./routes/index');
-// users.jsが実行されるように設定する。
+// 「/users」でアクセスしたときにusers.jsが実行されるように設定する。
 var usersRouter = require('./routes/users');
-// hello.jsが実行されるように設定する。
+// 「/hello」でアクセスしたときにhello.jsが実行されるように設定する。
 var helloRouter = require('./routes/hello');
 // アプリケーションの作成
 var app = express();

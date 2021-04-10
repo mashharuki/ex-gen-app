@@ -1,9 +1,19 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+// DBモジュールを読み込む
+const db = require ('../models/index'); 
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+/**
+ *  index画面 GETアクセス時の画面
+ */
+router.get('/', (req, res, next) => {
+  db.User.findAll().then(users => {
+    var data = {
+      title: 'Users/Index',
+      content: users
+    }
+    res.render('users/index', data);
+  });
 });
 
 module.exports = router;
