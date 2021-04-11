@@ -111,4 +111,47 @@ router.post('/delete', (req, res, next) => {
     });
 });
 
+/* 
+ * ログイン画面 GETアクセス時の処理 
+ */
+router.get('/login', (req, res, next) => {
+  db.User.findByPk(req.query.id).then(user => {
+    var data = {
+      title: 'Users/Login',
+      content: '名前とパスワードを入力してください。'
+    }
+    res.render('users/login', data);
+  });
+});
+
+/* 
+ * ログイン画面 POSTアクセス時の処理 
+ */
+router.post('/login', (req, res, next) => {
+    // SQLを実行する。
+    db.User.findOne({
+      where: { 
+        name: req.body.name,
+        pass: req.body.pass, 
+      }
+    }).then(user => { 
+      if (user != null) { // 正常時の処理
+        req.session.login = user;
+        let back = req.session.back;
+
+        if (back == null) {
+          // インデックス画面
+          back = '/';
+        }
+        res.redirect(back);
+      } else { // 失敗した時の処理
+        var data = {
+          title: 'Users/Login',
+          content: '名前かパスワードに間違いがあります。再度入力してください。'
+        }
+        res.render('users/login', data);
+      }
+    });
+});
+
 module.exports = router;
