@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   // associateを設定する。
   User.associate = function (models) {
     User.hasMany(models.Board);
+    User.hasMany(models.Markdata);
   } ; 
   return User;
 };
