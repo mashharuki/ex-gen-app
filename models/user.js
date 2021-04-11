@@ -1,5 +1,5 @@
 'use strict';
-// モデルの作成
+// Userモデルの作成
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
   },{});
   // associateを設定する。
   User.associate = function (models) {
-    
+    User.hasMany(models.Board);
   } ; 
   return User;
 };
