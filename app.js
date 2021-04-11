@@ -15,6 +15,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // 「/hello」でアクセスしたときにhello.jsが実行されるように設定する。
 var helloRouter = require('./routes/hello');
+// 「/boards」でアクセスしたときにboards.jsが実行されるように設定する。
+var boardsRouter = require('./routes/boards');
 // アプリケーションの作成
 var app = express();
 // view engine setup
@@ -38,6 +40,7 @@ app.use(session(session_opt));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/hello', helloRouter);
+app.use('/boards', boardsRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
