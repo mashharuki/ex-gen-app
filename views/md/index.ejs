@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body class="container">
+    <header>
+        <h1 class="display-4">
+            <%= title %>
+        </h1>
+    </header>
+    <div role="main">
+        <p class="my-4 h5">
+            Hi, <span><%= login.name %></span>!<br>
+            Welcome to <%= title  %>.
+        </p>
+        <form method="post" action="/md">
+            <div class="form-group">
+                <label for="find">FIND</label>
+                <input type="text" name="find" id="find" class="form-control" value="<%= form.find %>">
+            </div>
+            <input type="submit" value="検索" class="btn btn-primary">
+        </form>
+        <p class="my-4 h5"><%= message %></p>
+        <table class="table mt-5">
+            <% for (let i in content) { %>
+            <%- var obj = content[i]; %>
+            <tr>
+                <td>
+                    <a href="/md/mark/<%= obj.id %>" class="text-dark">
+                        <%= obj.title %>
+                    </a>
+                </td>
+            </tr>
+            <% } %> 
+        </table>
+        <p></p>
+        <p>
+            <a href="/md/add">
+                ※データを登録
+            </a>
+        </p>
+    </div>
+  </body>
+</html>
